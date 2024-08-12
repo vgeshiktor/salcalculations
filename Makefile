@@ -8,7 +8,7 @@ REQUIREMENTS_FILE := requirements.txt
 
 # Define the source and test directories
 SRC_DIR := .
-TEST_DIR := tests
+TEST_DIR := .
 
 .PHONY: all install_deps lint format sort_imports type_check test clean
 

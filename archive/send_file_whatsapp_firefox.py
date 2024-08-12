@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 
-
 options = Options()
 options.binary_location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
 
@@ -16,7 +15,9 @@ driver.get("https://web.whatsapp.com/")
 input("Press Enter after scanning the QR code.")
 
 # Find the search box and send a message to the desired recipient
-search_box = driver.find_element_by_xpath('//div[@title="Search or start new chat"]')
+search_box = driver.find_element_by_xpath(
+    '//div[@title="Search or start new chat"]'
+)
 search_box.send_keys("Inna Sherts")
 search_box.send_keys(Keys.ENTER)
 

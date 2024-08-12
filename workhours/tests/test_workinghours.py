@@ -1,16 +1,11 @@
-from typing import Dict, Any, Tuple
+from typing import Any, Dict, Tuple
 
 import pytest
 
-from workinghours import (
-    calculate_salaries,
-    create_worker_dict,
-    from_xls_to_json,
-    get_worker_data,
-    get_working_hours,
-    load_json,
-    time_string_to_decimals,
-)
+from workhours.workinghours import (calculate_salaries, create_worker_dict,
+                                    from_xls_to_json, get_worker_data,
+                                    get_working_hours, load_json,
+                                    time_string_to_decimals)
 
 
 @pytest.fixture

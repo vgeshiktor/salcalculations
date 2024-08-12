@@ -20,9 +20,9 @@ THICK_BORDER = Border(
 )
 
 # File path constants
-MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/report_example.xlsx"
-WORKER_DETAILS_JSON_PATH = "config/id2worker.json"
-SALARY_DETAILS_OUTPUT_PATH = "output/salary_details.xlsx"
+MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "../input/report_example.xlsx"
+WORKER_DETAILS_JSON_PATH = "../config/id2worker.json"
+SALARY_DETAILS_OUTPUT_PATH = "../output/salary_details.xlsx"
 
 
 def load_workers_monthly_attendance_data(

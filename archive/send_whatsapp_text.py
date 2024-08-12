@@ -19,7 +19,9 @@ driver.get("https://web.whatsapp.com/")
 input("Press Enter after scanning the QR code.")
 
 # find the contact in the search box
-search_box = driver.find_element_by_xpath('//div[@title="Search or start new chat"]')
+search_box = driver.find_element_by_xpath(
+    '//div[@title="Search or start new chat"]'
+)
 search_box.send_keys(contact)
 search_box.send_keys(Keys.ENTER)
 

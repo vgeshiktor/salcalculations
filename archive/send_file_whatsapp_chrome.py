@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 # Start a new instance of the Google Chrome driver
-driver = webdriver.Chrome(executable_path=r'C:\chromedriver_win32\chromedriver.exe')
+driver = webdriver.Chrome(
+    executable_path=r"C:\chromedriver_win32\chromedriver.exe"
+)
 
 # Load the WhatsApp Web page
 driver.get("https://web.whatsapp.com/")
@@ -11,7 +13,9 @@ driver.get("https://web.whatsapp.com/")
 input("Press Enter after scanning the QR code.")
 
 # Find the search box and send a message to the desired recipient
-search_box = driver.find_element_by_xpath('//div[@title="Search or start new chat"]')
+search_box = driver.find_element_by_xpath(
+    '//div[@title="Search or start new chat"]'
+)
 search_box.send_keys("Recipient Name")
 search_box.send_keys(Keys.ENTER)
 
