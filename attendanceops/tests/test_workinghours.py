@@ -2,10 +2,15 @@ from typing import Any, Dict, Tuple
 
 import pytest
 
-from workhours.workinghours import (calculate_salaries, create_worker_dict,
-                                    from_xls_to_json, get_worker_data,
-                                    get_working_hours, load_json,
-                                    time_string_to_decimals)
+from attendanceops.workinghours import (
+    calculate_salaries,
+    create_worker_dict,
+    from_xls_to_json,
+    get_worker_data,
+    get_working_hours,
+    load_json,
+    time_string_to_decimals,
+)
 
 
 @pytest.fixture
