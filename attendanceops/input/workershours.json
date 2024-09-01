@@ -1,9 +1,9 @@
 [
    {
-      "id": "123",
+      "id": "36155331",
       "name": "פרידמן יערית",
       "worker_type": "monthly",
-      "hours": 0,
+      "hours": 72,
       "per_hour": 0,
       "reg_hours_sal": 0,
       "hours_125": 0,
@@ -21,14 +21,14 @@
       "total_sal": 0
    },
    {
-      "id": "321",
-      "name": "someone",
+      "id": "60176187",
+      "name": "עטר גלי רבקה",
       "worker_type": "hourly",
-      "hours": 0,
+      "hours": 72,
       "per_hour": 0,
       "reg_hours_sal": 0,
-      "hours_125": 0.0,
-      "per_hour_125": 0.0,
+      "hours_125": 0,
+      "per_hour_125": 0,
       "extra_hours_sal": 0,
       "monthly_sal": 0,
       "trans_expanses": 0,

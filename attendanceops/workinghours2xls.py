@@ -4,7 +4,7 @@ import openpyxl
 from openpyxl.styles import Alignment, Border, Font, Side
 from openpyxl.worksheet.worksheet import Worksheet
 
-from workinghours import from_xls_to_json
+from workinghours import from_xls_to_json, monthly_salary_workers_data
 
 # Constants
 HEADER_FONT = Font(bold=True, size=14)
@@ -20,9 +20,11 @@ THICK_BORDER = Border(
 )
 
 # File path constants
-MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "../input/report_example.xlsx"
-WORKER_DETAILS_JSON_PATH = "../config/id2worker.json"
-SALARY_DETAILS_OUTPUT_PATH = "../output/salary_details.xlsx"
+# MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/report_example.xlsx"
+MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/08-2024.xlsx"
+WORKER_HOURS_JSON_PATH = "input/workershours.json"
+WORKER_DETAILS_JSON_PATH = "config/id2worker.json"
+SALARY_DETAILS_OUTPUT_PATH = "output/salary_details.xlsx"
 
 
 def load_workers_monthly_attendance_data(
@@ -197,9 +199,19 @@ def save_workbook(wb: openpyxl.Workbook, file_path: str) -> None:
 
 
 def main() -> None:
+    # Load workers data from Excel and JSON files
     workers = load_workers_monthly_attendance_data(
         MONTHLY_ATTENDANCE_REPORT_XLS_PATH, WORKER_DETAILS_JSON_PATH
     )
+
+    # append monthly salary workers that do not appear in the attendance report
+    workers.extend(
+        monthly_salary_workers_data(
+            WORKER_HOURS_JSON_PATH, WORKER_DETAILS_JSON_PATH
+        )
+    )
+
+    # create the workbook
     wb = create_workbook()
     ws = wb.active
 

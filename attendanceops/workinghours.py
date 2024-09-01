@@ -52,6 +52,57 @@ def from_xls_to_json(
     return workers
 
 
+def monthly_salary_workers_data(
+    worker_hours_json_path: str = "workershours.json",
+    worker_details_json_path: str = "id2worker.json",
+) -> List[Dict[str, Any]]:
+    worker_data = get_worker_data(worker_details_json_path)
+    workers_hours = get_working_hours(worker_hours_json_path)
+
+    workers = []
+
+    for row in workers_hours:
+        worker = create_worker_dict_from_json(row, worker_data)
+        if worker:
+            workers.append(worker)
+
+    return workers
+
+
+def create_worker_dict_from_json(
+    worker_hours: Dict[str, Any], worker_data: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Create a worker dictionary from a row of JSON data."""
+    worker_id = worker_hours["id"]
+    if worker_id not in worker_data:
+        return {}
+
+    worker = {
+        "id": worker_id,
+        "name": worker_data[worker_id]["name"],
+        "worker_type": worker_data[worker_id]["worker_type"],
+        "hours": worker_hours["hours"],
+        "per_hour": worker_data[worker_id]["per_hour"],
+        "reg_hours_sal": worker_hours["reg_hours_sal"],
+        "hours_125": worker_hours["hours_125"],
+        "per_hour_125": worker_data[worker_id]["per_hour_125"],
+        "extra_hours_sal": worker_hours["extra_hours_sal"],
+        "monthly_sal": worker_data[worker_id]["monthly_sal"],
+        "trans_expanses": worker_data[worker_id]["trans_expanses"],
+        "total_hours": worker_hours["total_hours"],
+        "work_days": worker_hours["work_days"],
+        "holidays": worker_hours["holidays"],
+        "holiday_present": worker_hours["holiday_present"],
+        "sick_days": worker_hours["sick_days"],
+        "vac_days": worker_hours["vac_days"],
+        "absense_hours": worker_hours["absense_hours"],
+        "total_sal": worker_hours["total_sal"],
+    }
+
+    calculate_salaries(worker)
+    return worker
+
+
 def create_worker_dict(
     row: tuple, worker_data: Dict[str, Any]
 ) -> Dict[str, Any]:
