@@ -82,6 +82,7 @@ def write_worker_data(
         row=start_row + 2, column=4, value=worker["reg_hours_sal"]
     ).font = TEXT_FONT
     ws.cell(row=start_row + 2, column=4).border = THICK_BORDER
+    ws.cell(row=start_row + 2, column=4).number_format = "#"
 
     # Empty row (start_row + 3)
 
@@ -100,6 +101,7 @@ def write_worker_data(
         row=start_row + 4, column=4, value=worker["extra_hours_sal"]
     ).font = TEXT_FONT
     ws.cell(row=start_row + 4, column=4).border = THICK_BORDER
+    ws.cell(row=start_row + 4, column=4).number_format = "#"
 
     # Empty row (start_row + 5)
 
@@ -125,6 +127,7 @@ def write_worker_data(
         TEXT_FONT
     )
     ws.cell(row=start_row + 7, column=4).border = THICK_BORDER
+    ws.cell(row=start_row + 7, column=4).number_format = "#"
 
     # Empty row (start_row + 8)
 

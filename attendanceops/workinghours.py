@@ -95,7 +95,11 @@ def create_worker_dict_from_json(
         "holiday_present": worker_hours["holiday_present"],
         "sick_days": worker_hours["sick_days"],
         "vac_days": worker_hours["vac_days"],
-        "absense_hours": worker_hours["absense_hours"],
+        "absense_hours": (
+            worker_hours["absense_hours"]
+            if worker_hours["worker_type"] == "monthly"
+            else 0
+        ),
         "total_sal": worker_hours["total_sal"],
     }
 
@@ -149,6 +153,9 @@ def calculate_salaries(worker: Dict[str, Any]) -> None:
         )
     else:
         worker["reg_hours_sal"] = worker["monthly_sal"]
+
+    if worker["reg_hours_sal"] == 0:
+        worker["trans_expanses"] = 0
 
     worker["total_sal"] = (
         worker["reg_hours_sal"]
