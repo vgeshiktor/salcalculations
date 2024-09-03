@@ -2,7 +2,6 @@ import argparse
 
 from salariesops.pdf.split2pages.handler import split_pdf
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="splitpdf", description="Split a PDF into individual pages."
