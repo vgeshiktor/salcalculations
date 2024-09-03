@@ -119,6 +119,7 @@ def create_worker_dict(
         "id": worker_id,
         "name": worker_data[worker_id]["name"],
         "worker_type": worker_data[worker_id]["worker_type"],
+        "daily_hours": worker_data[worker_id]["daily_hours"],
         "hours": row[6],
         "per_hour": worker_data[worker_id]["per_hour"],
         "reg_hours_sal": 0,
@@ -127,7 +128,7 @@ def create_worker_dict(
         "extra_hours_sal": 0,
         "monthly_sal": worker_data[worker_id]["monthly_sal"],
         "trans_expanses": worker_data[worker_id]["trans_expanses"],
-        "total_hours": row[5],
+        "total_hours": row[6],
         "work_days": row[3],
         "holidays": 0,
         "holiday_present": 0,
@@ -151,6 +152,10 @@ def calculate_salaries(worker: Dict[str, Any]) -> None:
             time_string_to_decimals(worker["hours_125"])
             * worker["per_hour_125"]
         )
+    elif worker["worker_type"] == "daily":
+        worker["hours"] = worker["work_days"] * worker["daily_hours"]
+        worker["total_hours"] = worker["hours"]
+        worker["reg_hours_sal"] = worker["hours"] * worker["per_hour"]
     else:
         worker["reg_hours_sal"] = worker["monthly_sal"]
 
