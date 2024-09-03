@@ -20,7 +20,6 @@ THICK_BORDER = Border(
 )
 
 # File path constants
-# MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/report_example.xlsx"
 MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/08-2024.xlsx"
 WORKER_HOURS_JSON_PATH = "input/workershours.json"
 WORKER_DETAILS_JSON_PATH = "config/id2worker.json"
@@ -55,131 +54,81 @@ def write_worker_data(
     start_row: int,
 ) -> int:
     """Write worker data to the worksheet starting from the given row."""
-    ws.cell(row=start_row, column=1, value=worker["name"]).font = HEADER_FONT
-    ws.cell(row=start_row, column=1).alignment = ALIGN_RIGHT
+
+    def write_cell(
+        row,
+        col,
+        value,
+        font=TEXT_FONT,
+        alignment=ALIGN_LEFT,
+        border=THICK_BORDER,
+        number_format=None,
+    ):
+        cell = ws.cell(row=row, column=col, value=value)
+        cell.font = font
+        cell.alignment = alignment
+        cell.border = border
+        if number_format:
+            cell.number_format = number_format
+
+    write_cell(start_row, 1, worker["name"], HEADER_FONT, ALIGN_RIGHT)
 
     # Writing title in the second row of the table
-    ws.cell(row=start_row + 1, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 1, column=2, value="שעות").font = HEADER_FONT
-    ws.cell(row=start_row + 1, column=2).border = THICK_BORDER
-    ws.cell(row=start_row + 1, column=3, value="לשעה ₪").font = HEADER_FONT
-    ws.cell(row=start_row + 1, column=3).border = THICK_BORDER
-    ws.cell(row=start_row + 1, column=4, value='סה"כ ₪').font = HEADER_FONT
-    ws.cell(row=start_row + 1, column=4).border = THICK_BORDER
+    write_cell(start_row + 1, 1, None)
+    write_cell(start_row + 1, 2, "שעות", HEADER_FONT)
+    write_cell(start_row + 1, 3, "לשעה ₪", HEADER_FONT)
+    write_cell(start_row + 1, 4, 'סה"כ ₪', HEADER_FONT)
 
     # Writing regular hours row in the 3rd row of the table
-    ws.cell(row=start_row + 2, column=1, value="ש.רגילות").font = HEADER_FONT
-    ws.cell(row=start_row + 2, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 2, column=2, value=worker["hours"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 2, column=2).border = THICK_BORDER
-    ws.cell(row=start_row + 2, column=3, value=worker["per_hour"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 2, column=3).border = THICK_BORDER
-    ws.cell(
-        row=start_row + 2, column=4, value=worker["reg_hours_sal"]
-    ).font = TEXT_FONT
-    ws.cell(row=start_row + 2, column=4).border = THICK_BORDER
-    ws.cell(row=start_row + 2, column=4).number_format = "#"
+    write_cell(start_row + 2, 1, "ש.רגילות", HEADER_FONT)
+    write_cell(start_row + 2, 2, worker["hours"])
+    write_cell(start_row + 2, 3, worker["per_hour"])
+    write_cell(start_row + 2, 4, worker["reg_hours_sal"], number_format="#")
 
     # Empty row (start_row + 3)
 
     # Writing extra hours row in the 4th row of the table
-    ws.cell(row=start_row + 4, column=1, value="ש.נ. 125%").font = HEADER_FONT
-    ws.cell(row=start_row + 4, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 4, column=2, value=worker["hours_125"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 4, column=2).border = THICK_BORDER
-    ws.cell(row=start_row + 4, column=3, value=worker["per_hour_125"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 4, column=3).border = THICK_BORDER
-    ws.cell(
-        row=start_row + 4, column=4, value=worker["extra_hours_sal"]
-    ).font = TEXT_FONT
-    ws.cell(row=start_row + 4, column=4).border = THICK_BORDER
-    ws.cell(row=start_row + 4, column=4).number_format = "#"
+    write_cell(start_row + 4, 1, "ש.נ. 125%", HEADER_FONT)
+    write_cell(start_row + 4, 2, worker["hours_125"])
+    write_cell(start_row + 4, 3, worker["per_hour_125"])
+    write_cell(start_row + 4, 4, worker["extra_hours_sal"], number_format="#")
 
     # Empty row (start_row + 5)
 
     # Writing transportation expenses row in the 6th row of the table
-    ws.cell(row=start_row + 6, column=1, value="נסיעות").font = HEADER_FONT
-    ws.cell(row=start_row + 6, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 6, column=2).border = THICK_BORDER
-    ws.cell(row=start_row + 6, column=3).border = THICK_BORDER
-    ws.cell(
-        row=start_row + 6, column=4, value=worker["trans_expanses"]
-    ).font = TEXT_FONT
-    ws.cell(row=start_row + 6, column=4).border = THICK_BORDER
+    write_cell(start_row + 6, 1, "נסיעות", HEADER_FONT)
+    write_cell(start_row + 6, 4, worker["trans_expanses"])
 
     # Writing total salary row in the 7th row of the table
-    ws.cell(row=start_row + 7, column=1, value='סה"כ').font = HEADER_FONT
-    ws.cell(row=start_row + 7, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 7, column=2, value=worker["total_hours"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 7, column=2).border = THICK_BORDER
-    ws.cell(row=start_row + 7, column=3).border = THICK_BORDER
-    ws.cell(row=start_row + 7, column=4, value=worker["total_sal"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 7, column=4).border = THICK_BORDER
-    ws.cell(row=start_row + 7, column=4).number_format = "#"
+    write_cell(start_row + 7, 1, 'סה"כ', HEADER_FONT)
+    write_cell(start_row + 7, 2, worker["total_hours"])
+    write_cell(start_row + 7, 4, worker["total_sal"], number_format="#")
 
     # Empty row (start_row + 8)
 
     # Writing work days row in the 9th row of the table
-    ws.cell(row=start_row + 9, column=1, value="ימי עבודה").font = HEADER_FONT
-    ws.cell(row=start_row + 9, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 9, column=2, value=worker["work_days"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 9, column=2).border = THICK_BORDER
+    write_cell(start_row + 9, 1, "ימי עבודה", HEADER_FONT)
+    write_cell(start_row + 9, 2, worker["work_days"])
 
     # Writing holiday row in the 10th row of the table
-    ws.cell(row=start_row + 10, column=1, value="חג").font = HEADER_FONT
-    ws.cell(row=start_row + 10, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 10, column=2, value=worker["holidays"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 10, column=2).border = THICK_BORDER
+    write_cell(start_row + 10, 1, "חג", HEADER_FONT)
+    write_cell(start_row + 10, 2, worker["holidays"])
 
     # Writing gift row in the 11th row of the table
-    ws.cell(row=start_row + 11, column=1, value="מתנה").font = HEADER_FONT
-    ws.cell(row=start_row + 11, column=1).border = THICK_BORDER
-    ws.cell(
-        row=start_row + 11, column=2, value=worker["holiday_present"]
-    ).font = TEXT_FONT
-    ws.cell(row=start_row + 11, column=2).border = THICK_BORDER
+    write_cell(start_row + 11, 1, "מתנה", HEADER_FONT)
+    write_cell(start_row + 11, 2, worker["holiday_present"])
 
     # Writing sick days row in the 12th row of the table
-    ws.cell(row=start_row + 12, column=1, value="ימי מחלה").font = HEADER_FONT
-    ws.cell(row=start_row + 12, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 12, column=2, value=worker["sick_days"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 12, column=2).border = THICK_BORDER
+    write_cell(start_row + 12, 1, "ימי מחלה", HEADER_FONT)
+    write_cell(start_row + 12, 2, worker["sick_days"])
 
     # Writing vacation days row in the 13th row of the table
-    ws.cell(row=start_row + 13, column=1, value="ימי חופש").font = HEADER_FONT
-    ws.cell(row=start_row + 13, column=1).border = THICK_BORDER
-    ws.cell(row=start_row + 13, column=2, value=worker["vac_days"]).font = (
-        TEXT_FONT
-    )
-    ws.cell(row=start_row + 13, column=2).border = THICK_BORDER
+    write_cell(start_row + 13, 1, "ימי חופש", HEADER_FONT)
+    write_cell(start_row + 13, 2, worker["vac_days"])
 
     # Write absense hours row in the 14th row of the table
-    ws.cell(row=start_row + 14, column=1, value="שעות להוריד").font = (
-        HEADER_FONT
-    )
-    ws.cell(row=start_row + 14, column=1).border = THICK_BORDER
-    ws.cell(
-        row=start_row + 14, column=2, value=worker["absense_hours"]
-    ).font = TEXT_FONT
-    ws.cell(row=start_row + 14, column=2).border = THICK_BORDER
+    write_cell(start_row + 14, 1, "שעות להוריד", HEADER_FONT)
+    write_cell(start_row + 14, 2, worker["absense_hours"])
 
     # Adding some space between tables
     return start_row + 18
