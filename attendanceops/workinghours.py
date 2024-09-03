@@ -3,6 +3,11 @@ from typing import Any, Dict, List
 
 import openpyxl
 
+# Constants
+WORKER_HOURS_JSON_PATH = "workershours.json"
+WORKER_DETAILS_JSON_PATH = "id2worker.json"
+MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "report_example.xlsx"
+
 
 def load_json(file_path: str) -> Any:
     """Load JSON data from a file."""
@@ -14,32 +19,31 @@ def load_json(file_path: str) -> Any:
         return {}
 
 
-def get_working_hours(file_path: str = "workershours.json") -> Any:
+def get_working_hours(file_path: str = WORKER_HOURS_JSON_PATH) -> Any:
     """Get working hours from a JSON file."""
     return load_json(file_path)
 
 
-def get_worker_data(file_path: str) -> Any:
+def get_worker_data(file_path: str = WORKER_DETAILS_JSON_PATH) -> Any:
     """Get worker data from a JSON file."""
     return load_json(file_path)
 
 
 def from_xls_to_json(
-    monthly_attendance_report_xsl_path: str = "report_example.xlsx",
-    worker_details_json_path: str = "id2worker.json",
+    monthly_attendance_report_xsl_path: str = (
+        MONTHLY_ATTENDANCE_REPORT_XLS_PATH
+    ),
+    worker_details_json_path: str = WORKER_DETAILS_JSON_PATH,
 ) -> List[Dict[str, Any]]:
-    """Convert data from an Excel file to a JSON-compatible
-    list of dictionaries.
-    :param monthly_attendance_report_xsl_path: path to monthly working hours
-    report in Excel format
-    :param worker_details_json_path: path to worker details JSON file
+    """Convert data from an Excel file to a JSON-compatible list of
+    dictionaries.
+        :param monthly_attendance_report_xsl_path: path to
+        monthly working hours report in Excel format
+        :param worker_details_json_path: path to worker details JSON file
     """
     workbook = openpyxl.load_workbook(monthly_attendance_report_xsl_path)
     sheet = workbook.active
-
-    # headers = [cell.value for cell in sheet[1]]
     worker_data = get_worker_data(worker_details_json_path)
-
     workers = []
 
     for row in sheet.iter_rows(
@@ -53,12 +57,11 @@ def from_xls_to_json(
 
 
 def monthly_salary_workers_data(
-    worker_hours_json_path: str = "workershours.json",
-    worker_details_json_path: str = "id2worker.json",
+    worker_hours_json_path: str = WORKER_HOURS_JSON_PATH,
+    worker_details_json_path: str = WORKER_DETAILS_JSON_PATH,
 ) -> List[Dict[str, Any]]:
     worker_data = get_worker_data(worker_details_json_path)
     workers_hours = get_working_hours(worker_hours_json_path)
-
     workers = []
 
     for row in workers_hours:
@@ -170,8 +173,8 @@ def calculate_salaries(worker: Dict[str, Any]) -> None:
 
 
 def time_string_to_decimals(time_string: str) -> float:
+    """Convert a time string in HH:MM:SS format to decimal hours."""
     try:
-        """Convert a time string in HH:MM:SS format to decimal hours."""
         fields = time_string.split(":")
         hours = float(fields[0]) if len(fields) > 0 else 0.0
         minutes = float(fields[1]) if len(fields) > 1 else 0.0
