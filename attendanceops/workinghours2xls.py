@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 
 import openpyxl
 from openpyxl.styles import Alignment, Border, Font, Side
+from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
 from workinghours import from_xls_to_json, monthly_salary_workers_data
@@ -20,10 +21,16 @@ THICK_BORDER = Border(
 )
 
 # File path constants
-MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/08-2024.xlsx"
+MONTHLY_ATTENDANCE_REPORT_XLS_PATH = "input/09-2024.xlsx"
 WORKER_HOURS_JSON_PATH = "input/workershours.json"
 WORKER_DETAILS_JSON_PATH = "config/id2worker.json"
 SALARY_DETAILS_OUTPUT_PATH = "output/salary_details.xlsx"
+
+
+# Function to convert numeric row and column to Excel address
+def get_excel_address(row, col):
+    column_letter = get_column_letter(col)
+    return f"{column_letter}{row}"
 
 
 def load_workers_monthly_attendance_data(
@@ -81,9 +88,25 @@ def write_worker_data(
 
     # Writing regular hours row in the 3rd row of the table
     write_cell(start_row + 2, 1, "ש.רגילות", HEADER_FONT)
-    write_cell(start_row + 2, 2, worker["hours"])
+    write_cell(start_row + 2, 2, worker["hours"], number_format="#")
     write_cell(start_row + 2, 3, worker["per_hour"])
-    write_cell(start_row + 2, 4, worker["reg_hours_sal"], number_format="#")
+
+    hours_cell = get_excel_address(start_row + 2, 2)
+    per_hour_cell = get_excel_address(start_row + 2, 3)
+    hours_125_cell = get_excel_address(start_row + 4, 2)
+    per_hour_125_cell = get_excel_address(start_row + 4, 3)
+
+    if worker["worker_type"] == "hourly":
+        write_cell(
+            start_row + 2,
+            4,
+            f"={hours_cell}*{per_hour_cell}",
+            number_format="#",
+        )
+    else:
+        write_cell(
+            start_row + 2, 4, worker["reg_hours_sal"], number_format="#"
+        )
 
     # Empty row (start_row + 3)
 
@@ -91,7 +114,12 @@ def write_worker_data(
     write_cell(start_row + 4, 1, "ש.נ. 125%", HEADER_FONT)
     write_cell(start_row + 4, 2, worker["hours_125"])
     write_cell(start_row + 4, 3, worker["per_hour_125"])
-    write_cell(start_row + 4, 4, worker["extra_hours_sal"], number_format="#")
+    write_cell(
+        start_row + 4,
+        4,
+        f"={hours_125_cell} * {per_hour_125_cell}",
+        number_format="#",
+    )
 
     # Empty row (start_row + 5)
 
@@ -101,8 +129,23 @@ def write_worker_data(
 
     # Writing total salary row in the 7th row of the table
     write_cell(start_row + 7, 1, 'סה"כ', HEADER_FONT)
-    write_cell(start_row + 7, 2, worker["total_hours"])
-    write_cell(start_row + 7, 4, worker["total_sal"], number_format="#")
+    write_cell(
+        start_row + 7,
+        2,
+        f"={hours_cell}+{hours_125_cell}",
+        number_format="#",
+    )
+    reg_hours_sal_cell = get_excel_address(start_row + 2, 4)
+    extra_hours_sal_cell = get_excel_address(start_row + 4, 4)
+    trans_expanses_cell = get_excel_address(start_row + 6, 4)
+    write_cell(
+        start_row + 7,
+        4,
+        f"={reg_hours_sal_cell} + "
+        f"{extra_hours_sal_cell} + {trans_expanses_cell}",
+        number_format="#",
+    )
+    # write_cell(start_row + 7, 4, worker["total_sal"], number_format="#")
 
     # Empty row (start_row + 8)
 

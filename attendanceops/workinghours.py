@@ -95,7 +95,7 @@ def create_worker_dict_from_json(
         "total_hours": worker_hours["total_hours"],
         "work_days": worker_hours["work_days"],
         "holidays": worker_hours["holidays"],
-        "holiday_present": worker_hours["holiday_present"],
+        "holiday_present": worker_data[worker_id]["holiday_present"],
         "sick_days": worker_hours["sick_days"],
         "vac_days": worker_hours["vac_days"],
         "absense_hours": (
@@ -123,10 +123,10 @@ def create_worker_dict(
         "name": worker_data[worker_id]["name"],
         "worker_type": worker_data[worker_id]["worker_type"],
         "daily_hours": worker_data[worker_id]["daily_hours"],
-        "hours": row[6],
+        "hours": int(time_string_to_decimals(row[6])),
         "per_hour": worker_data[worker_id]["per_hour"],
         "reg_hours_sal": 0,
-        "hours_125": row[7],
+        "hours_125": int(time_string_to_decimals(row[7])),
         "per_hour_125": worker_data[worker_id]["per_hour_125"],
         "extra_hours_sal": 0,
         "monthly_sal": worker_data[worker_id]["monthly_sal"],
@@ -134,7 +134,7 @@ def create_worker_dict(
         "total_hours": row[6],
         "work_days": row[3],
         "holidays": 0,
-        "holiday_present": 0,
+        "holiday_present": worker_data[worker_id]["holiday_present"],
         "sick_days": row[12],
         "vac_days": row[13],
         "absense_hours": row[8],
@@ -148,17 +148,17 @@ def create_worker_dict(
 def calculate_salaries(worker: Dict[str, Any]) -> None:
     """Calculate salaries for a worker."""
     if worker["worker_type"] == "hourly":
-        worker["reg_hours_sal"] = (
-            time_string_to_decimals(worker["hours"]) * worker["per_hour"]
-        )
+        worker["reg_hours_sal"] = worker["hours"] * worker["per_hour"]
         worker["extra_hours_sal"] = (
-            time_string_to_decimals(worker["hours_125"])
-            * worker["per_hour_125"]
+            worker["hours_125"] * worker["per_hour_125"]
         )
+
+        worker["absense_hours"] = 0
     elif worker["worker_type"] == "daily":
         worker["hours"] = worker["work_days"] * worker["daily_hours"]
         worker["total_hours"] = worker["hours"]
         worker["reg_hours_sal"] = worker["hours"] * worker["per_hour"]
+        worker["absense_hours"] = 0
     else:
         worker["reg_hours_sal"] = worker["monthly_sal"]
 
